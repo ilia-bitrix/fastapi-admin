@@ -7,12 +7,30 @@ from tortoise import Model
 from tortoise.fields import ManyToManyRelation
 from tortoise.transactions import in_transaction
 
-from fastapi_admin.depends import get_model, get_model_resource, get_resources
-from fastapi_admin.resources import Model as ModelResource
-from fastapi_admin.responses import redirect
-from fastapi_admin.template import render_values, templates
+from app.other_apps.fastapi_admin.depends import get_model, get_model_resource, get_resources
+from app.other_apps.fastapi_admin.resources import Model as ModelResource
+from app.other_apps.fastapi_admin.responses import redirect
+from app.other_apps.fastapi_admin.template import render_values, templates
+
 
 router = APIRouter()
+
+
+@router.get("/")
+async def home(
+        request: Request,
+        resources=Depends(get_resources),
+):
+    return templates.TemplateResponse(
+        "dashboard.html",
+        context={
+            "request": request,
+            "resources": resources,
+            "resource_label": "Dashboard",
+            "page_pre_title": "overview",
+            "page_title": "Dashboard",
+        },
+    )
 
 
 @router.get("/{resource}/list")
@@ -79,7 +97,7 @@ async def list_view(
 async def update(
     request: Request,
     resource: str = Path(...),
-    pk: str = Path(...),
+    pk: int = Path(...),
     model_resource: ModelResource = Depends(get_model_resource),
     resources=Depends(get_resources),
     model=Depends(get_model),
@@ -136,7 +154,7 @@ async def update(
 async def update_view(
     request: Request,
     resource: str = Path(...),
-    pk: str = Path(...),
+    pk: int = Path(...),
     model_resource: ModelResource = Depends(get_model_resource),
     resources=Depends(get_resources),
     model=Depends(get_model),
@@ -237,7 +255,7 @@ async def create(
 
 
 @router.delete("/{resource}/delete/{pk}")
-async def delete(request: Request, pk: str, model: Model = Depends(get_model)):
+async def delete(request: Request, pk: int, model: Model = Depends(get_model)):
     await model.filter(pk=pk).delete()
     return RedirectResponse(url=request.headers.get("referer"), status_code=HTTP_303_SEE_OTHER)
 

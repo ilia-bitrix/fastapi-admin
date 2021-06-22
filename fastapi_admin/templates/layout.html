@@ -2,19 +2,17 @@
     <div class="wrapper min-vh-100">
         <aside class="navbar navbar-vertical navbar-expand-lg navbar-dark">
             <div class="container-fluid">
-                {% if request.app.logo_url %}
-                    <h1 class="navbar-brand navbar-brand-autodark">
-                        <a href="{{ request.app.admin_path }}">
-                            <img
-                                    src="{{ request.app.logo_url }}"
-                                    width="110"
-                                    height="32"
-                                    alt="Tabler"
-                                    class="navbar-brand-image"
-                            />
-                        </a>
-                    </h1>
-                {% endif %}
+                <h1 class="navbar-brand navbar-brand-autodark">
+                    <a href="{{ request.app.admin_path }}">
+                        <img
+                                src="{{ request.app.logo_url }}"
+                                width="110"
+                                height="32"
+                                alt="Tabler"
+                                class="navbar-brand-image"
+                        />
+                    </a>
+                </h1>
                 <div class="collapse navbar-collapse" id="navbar-menu">
                     <ul class="navbar-nav pt-lg-3">
                         {% for resource in resources %} {% if resource.type == 'link' %}
@@ -69,7 +67,84 @@
                 </div>
             </div>
             {% block footer %}
-                {% include "components/footer.html" %}
+                <footer class="footer footer-transparent d-print-none">
+                    <div class="container">
+                        <div class="row text-center align-items-center flex-row-reverse">
+                            <div class="col-lg-auto ms-lg-auto">
+                                <ul class="list-inline list-inline-dots mb-0">
+                                    <li class="list-inline-item">
+                                        <a
+                                                href="https://fastapi-admin.github.io/fastapi-admin"
+                                                class="link-secondary"
+                                        >Documentation</a
+                                        >
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <a
+                                                href="https://github.com/fastapi-admin/fastapi-admin/blob/dev/LICENSE"
+                                                class="link-secondary"
+                                        >License</a
+                                        >
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <a
+                                                href="https://github.com/fastapi-admin/fastapi-admin"
+                                                target="_blank"
+                                                class="link-secondary"
+                                                rel="noopener"
+                                        >Source code</a
+                                        >
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <a
+                                                href="https://sponsor.long2ice.cn"
+                                                target="_blank"
+                                                class="link-secondary"
+                                                rel="noopener"
+                                        >
+                                            <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="icon text-pink icon-filled icon-inline"
+                                                    width="24"
+                                                    height="24"
+                                                    viewBox="0 0 24 24"
+                                                    stroke-width="2"
+                                                    stroke="currentColor"
+                                                    fill="none"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                            >
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                <path
+                                                        d="M19.5 13.572l-7.5 7.428l-7.5 -7.428m0 0a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"
+                                                ></path>
+                                            </svg>
+                                            Sponsor
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-12 col-lg-auto mt-3 mt-lg-0">
+                                <ul class="list-inline list-inline-dots mb-0">
+                                    <li class="list-inline-item">
+                                        Copyright © {{ 2021 }} - {{ NOW_YEAR }}
+                                        <a href="http://github.com/long2ice" class="link-secondary"
+                                        >long2ice</a
+                                        >. All rights reserved.
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <a
+                                                href="https://github.com/fastapi-admin/fastapi-admin/releases/tag/v{{ VERSION }}"
+                                                class="link-secondary"
+                                                rel="noopener"
+                                        >v{{ VERSION }}</a
+                                        >
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
             {% endblock %}
         </div>
     </div>

@@ -7,8 +7,8 @@ from starlette.datastructures import UploadFile
 from starlette.requests import Request
 from tortoise import Model
 
-from fastapi_admin.file_upload import FileUpload
-from fastapi_admin.widgets import Widget
+from app.other_apps.fastapi_admin.file_upload import FileUpload
+from app.other_apps.fastapi_admin.widgets import Widget
 
 
 class Input(Widget):
@@ -199,10 +199,6 @@ class TextArea(Text):
     input_type = "textarea"
 
 
-class Editor(Text):
-    template = "widgets/inputs/editor.html"
-
-
 class DateTime(Text):
     input_type = "datetime"
 
@@ -234,7 +230,7 @@ class File(Input):
     async def parse_value(self, request: Request, value: Optional[UploadFile]):
         if value and value.filename:
             return await self.upload.upload(value)
-        return None
+        return ""
 
 
 class Image(File):

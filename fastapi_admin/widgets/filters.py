@@ -1,14 +1,13 @@
 import abc
 from enum import Enum as EnumCLS
-from typing import Any, Optional, Tuple, Type
+from typing import Any, Optional, Type
 
-import pendulum
 from starlette.requests import Request
 from tortoise import Model
 from tortoise.queryset import QuerySet
 
-from fastapi_admin import constants
-from fastapi_admin.widgets.inputs import Input
+from app.other_apps.fastapi_admin import constants
+from app.other_apps.fastapi_admin.widgets.inputs import Input
 
 
 class Filter(Input):
@@ -54,12 +53,7 @@ class Datetime(Filter):
     template = "widgets/filters/datetime.html"
 
     def __init__(
-        self,
-        name: str,
-        label: str,
-        format_: str = constants.DATETIME_FORMAT_MOMENT,
-        null: bool = True,
-        placeholder: str = "",
+        self, name: str, label: str, format_: str = constants.DATE_FORMAT_MOMENT, null: bool = True
     ):
         """
         Datetime filter
@@ -67,35 +61,22 @@ class Datetime(Filter):
         :param label:
         :param format_: the format of moment.js
         """
-        super().__init__(
-            name + "__range", label, null=null, format=format_, placeholder=placeholder
-        )
+        super().__init__(name + "__range", label, null=null, format=format_)
 
     async def parse_value(self, request: Request, value: Optional[str]):
-        if value:
-            ranges = value.split(" - ")
-            return pendulum.parse(ranges[0]), pendulum.parse(ranges[1])
+        return value.split(" - ")
 
-    async def render(self, request: Request, value: Tuple[pendulum.DateTime, pendulum.DateTime]):
-        format_ = self.context.get("format")
+    async def render(self, request: Request, value: Any):
         if value is not None:
-            value = value[0].format(format_) + " - " + value[1].format(format_)
+            value = " - ".join(value)
         return await super().render(request, value)
 
 
 class Date(Datetime):
     def __init__(
-        self,
-        name: str,
-        label: str,
-        format_: str = constants.DATE_FORMAT_MOMENT,
-        null: bool = True,
-        placeholder: str = "",
+        self, name: str, label: str, format_: str = constants.DATE_FORMAT_MOMENT, null: bool = True
     ):
-        super().__init__(
-            name=name, label=label, format_=format_, null=null, placeholder=placeholder
-        )
-        self.context.update(date=True)
+        super().__init__(name=name, label=label, format_=format_, null=null)
 
 
 class Select(Filter):
@@ -168,26 +149,3 @@ class ForeignKey(Select):
         if value is not None:
             value = int(value)
         return await super().render(request, value)
-
-
-class DistinctColumn(Select):
-    def __init__(self, model: Type[Model], name: str, label: str, null: bool = True):
-        super().__init__(name=name, label=label, null=null)
-        self.model = model
-        self.name = name
-
-    async def get_options(self):
-        ret = await self.get_values()
-        options = [
-            (
-                str(x[0]),
-                str(x[0]),
-            )
-            for x in ret
-        ]
-        if self.context.get("null"):
-            options = [("", "")] + options
-        return options
-
-    async def get_values(self):
-        return await self.model.all().distinct().values_list(self.name)

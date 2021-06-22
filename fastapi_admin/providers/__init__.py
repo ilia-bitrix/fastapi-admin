@@ -1,7 +1,7 @@
 import typing
 
 if typing.TYPE_CHECKING:
-    from fastapi_admin.app import FastAPIAdmin
+    from app.other_apps.fastapi_admin.app import FastAPIAdmin
 
 
 class Provider:

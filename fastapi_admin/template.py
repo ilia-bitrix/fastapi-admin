@@ -8,12 +8,13 @@ from jinja2 import pass_context
 from starlette.requests import Request
 from starlette.templating import Jinja2Templates
 
-from fastapi_admin import VERSION
-from fastapi_admin.constants import BASE_DIR
+from app.other_apps.fastapi_admin import VERSION
+from app.other_apps.fastapi_admin.constants import BASE_DIR
 
 if typing.TYPE_CHECKING:
-    from fastapi_admin.resources import Field, Model
+    from app.other_apps.fastapi_admin.resources import Field, Model
 
+print(os.path.join(BASE_DIR, "templates"))
 templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 templates.env.globals["VERSION"] = VERSION
 templates.env.globals["NOW_YEAR"] = date.today().year
@@ -75,9 +76,6 @@ async def render_values(
                 item.append(await fields[i].display.render(request, value[k]))
             else:
                 item.append(await fields[i].input.render(request, value[k]))
-        for compute_field in await model.get_compute_fields(request):
-            item.append(await compute_field.get_value(request, value))
-            cell_item.append({})
         ret.append(item)
         cell_attributes.append(cell_item)
     return ret, row_attributes, column_attributes, cell_attributes

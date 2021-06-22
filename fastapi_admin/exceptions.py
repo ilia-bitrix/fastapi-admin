@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from starlette.requests import Request
 from starlette.status import HTTP_500_INTERNAL_SERVER_ERROR
 
-from fastapi_admin.template import templates
+from app.other_apps.fastapi_admin.template import templates
 
 
 class ServerHTTPException(HTTPException):
