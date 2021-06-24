@@ -6,8 +6,8 @@ from starlette.requests import Request
 from starlette.status import HTTP_404_NOT_FOUND
 from tortoise import Tortoise
 
-from app.other_apps.fastapi_admin.exceptions import InvalidResource
-from app.other_apps.fastapi_admin.resources import Dropdown, Link, Model, Resource
+from fastapi_admin.exceptions import InvalidResource
+from fastapi_admin.resources import Dropdown, Link, Model, Resource
 
 
 def get_model(resource: Optional[str] = Path(...)):

@@ -9,11 +9,11 @@ from tortoise.fields import BooleanField, DateField, DatetimeField, JSONField
 from tortoise.fields.data import CharEnumFieldInstance, IntEnumFieldInstance, IntField, TextField
 from tortoise.queryset import QuerySet
 
-from app.other_apps.fastapi_admin.enums import Method
-from app.other_apps.fastapi_admin.exceptions import NoSuchFieldFound
-from app.other_apps.fastapi_admin.i18n import _
-from app.other_apps.fastapi_admin.widgets import Widget, displays, inputs
-from app.other_apps.fastapi_admin.widgets.filters import Filter
+from fastapi_admin.enums import Method
+from fastapi_admin.exceptions import NoSuchFieldFound
+from fastapi_admin.i18n import _
+from fastapi_admin.widgets import Widget, displays, inputs
+from fastapi_admin.widgets.filters import Filter, Search
 
 
 class Resource:
@@ -68,6 +68,18 @@ class Action(BaseModel):
             raise ValueError("ajax is False only available when method is Method.GET")
 
 
+class ToolbarAction(Action):
+    class_: Optional[str]
+
+
+class ComputeField(BaseModel):
+    label: str
+    name: str
+
+    async def get_value(self, request: Request, obj: dict):
+        return obj.get(self.name)
+
+
 class Model(Resource):
     model: Type[TortoiseModel]
     fields: List[Union[str, Field]] = []
@@ -77,6 +89,21 @@ class Model(Resource):
     filters: Optional[List[Union[str, Filter]]] = []
     can_create: bool = True
     enctype = "application/x-www-form-urlencoded"
+
+    async def get_compute_fields(self, request: Request) -> List[ComputeField]:
+        return []
+
+    async def get_toolbar_actions(self, request: Request) -> List[ToolbarAction]:
+        return [
+            ToolbarAction(
+                label=_("create"),
+                icon="fas fa-plus",
+                name="create",
+                method=Method.GET,
+                ajax=False,
+                class_="btn-dark",
+            )
+        ]
 
     async def row_attributes(self, request: Request, obj: dict) -> dict:
         return {}
@@ -122,6 +149,8 @@ class Model(Resource):
     async def resolve_query_params(cls, request: Request, values: dict, qs: QuerySet):
         ret = {}
         for f in cls.filters:
+            if isinstance(f, str):
+                f = Search(name=f, label=f.title())
             name = f.context.get("name")
             v = values.get(name)
             if v is not None and v != "":
@@ -145,6 +174,8 @@ class Model(Resource):
             else:
                 v = data.get(name)
                 value = await input_.parse_value(request, v)
+                if value is None:
+                    continue
                 ret[name] = value
         return ret, m2m_ret
 
@@ -154,6 +185,8 @@ class Model(Resource):
             values = {}
         ret = []
         for f in cls.filters:
+            if isinstance(f, str):
+                f = Search(name=f, label=f.title())
             name = f.context.get("name")
             value = values.get(name)
             ret.append(await f.render(request, value))

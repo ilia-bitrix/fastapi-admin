@@ -4,11 +4,11 @@ from aioredis import Redis
 from fastapi import FastAPI
 from pydantic import HttpUrl
 from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.middleware.cors import CORSMiddleware
-from starlette.status import HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
+# from starlette.middleware.cors import CORSMiddleware
+# from starlette.status import HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
 from tortoise import Model
 
-from app.other_apps.fastapi_admin import i18n
+from . import i18n
 
 from . import middlewares, template
 from .providers import Provider
@@ -16,11 +16,11 @@ from .resources import Dropdown
 from .resources import Model as ModelResource
 from .resources import Resource
 from .routes import router
-from .exceptions import (
-    forbidden_error_exception,
-    not_found_error_exception,
-    server_error_exception,
-)
+# from .exceptions import (
+#     forbidden_error_exception,
+#     not_found_error_exception,
+#     server_error_exception,
+# )
 
 
 class FastAPIAdmin(FastAPI):
@@ -70,6 +70,7 @@ class FastAPIAdmin(FastAPI):
                 self._set_model_resource(r)
 
     def register(self, resource: Type[Resource]):
+        """  Защита для дублирования обьектов  """
         if resource in self.resources:
             return
         self._set_model_resource(resource)
@@ -84,9 +85,9 @@ app = FastAPIAdmin(
     title="FastAdmin",
     description="A fast admin dashboard based on fastapi and tortoise-orm with tabler ui.",
 )
-app.add_exception_handler(HTTP_500_INTERNAL_SERVER_ERROR, server_error_exception)
-app.add_exception_handler(HTTP_404_NOT_FOUND, not_found_error_exception)
-app.add_exception_handler(HTTP_403_FORBIDDEN, forbidden_error_exception)
+# app.add_exception_handler(HTTP_500_INTERNAL_SERVER_ERROR, server_error_exception)
+# app.add_exception_handler(HTTP_404_NOT_FOUND, not_found_error_exception)
+# app.add_exception_handler(HTTP_403_FORBIDDEN, forbidden_error_exception)
 
 app.add_middleware(BaseHTTPMiddleware, dispatch=middlewares.language_processor)
 app.include_router(router)

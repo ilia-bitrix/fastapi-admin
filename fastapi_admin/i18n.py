@@ -2,8 +2,8 @@ import os
 
 from babel.support import Translations
 
-from app.other_apps.fastapi_admin.constants import BASE_DIR
-from app.other_apps.fastapi_admin.template import templates
+from fastapi_admin.constants import BASE_DIR
+from fastapi_admin.template import templates
 
 TRANSLATIONS = {
     "zh_CN": Translations.load(os.path.join(BASE_DIR, "locales"), locales=["zh_CN"]),
