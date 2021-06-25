@@ -8,13 +8,12 @@ from jinja2 import pass_context
 from starlette.requests import Request
 from starlette.templating import Jinja2Templates
 
-from app.other_apps.fastapi_admin import VERSION
-from app.other_apps.fastapi_admin.constants import BASE_DIR
+from fastapi_admin import VERSION
+from fastapi_admin.constants import BASE_DIR
 
 if typing.TYPE_CHECKING:
-    from app.other_apps.fastapi_admin.resources import Field, Model
+    from fastapi_admin.resources import Field, Model
 
-print(os.path.join(BASE_DIR, "templates"))
 templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 templates.env.globals["VERSION"] = VERSION
 templates.env.globals["NOW_YEAR"] = date.today().year

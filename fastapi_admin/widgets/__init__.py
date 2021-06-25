@@ -3,7 +3,7 @@ from typing import Any
 from starlette.requests import Request
 from starlette.templating import Jinja2Templates
 
-from app.other_apps.fastapi_admin.template import templates as t
+from fastapi_admin.template import templates as t
 
 
 class Widget:

@@ -4,8 +4,8 @@ from typing import Optional
 
 from starlette.requests import Request
 
-from app.other_apps.fastapi_admin import constants
-from app.other_apps.fastapi_admin.widgets import Widget
+from fastapi_admin import constants
+from fastapi_admin.widgets import Widget
 
 
 class Display(Widget):

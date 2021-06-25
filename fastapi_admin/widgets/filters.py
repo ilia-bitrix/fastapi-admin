@@ -6,8 +6,8 @@ from starlette.requests import Request
 from tortoise import Model
 from tortoise.queryset import QuerySet
 
-from app.other_apps.fastapi_admin import constants
-from app.other_apps.fastapi_admin.widgets.inputs import Input
+from fastapi_admin import constants
+from fastapi_admin.widgets.inputs import Input
 
 
 class Filter(Input):

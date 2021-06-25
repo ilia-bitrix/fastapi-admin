@@ -7,8 +7,8 @@ from starlette.datastructures import UploadFile
 from starlette.requests import Request
 from tortoise import Model
 
-from app.other_apps.fastapi_admin.file_upload import FileUpload
-from app.other_apps.fastapi_admin.widgets import Widget
+from fastapi_admin.file_upload import FileUpload
+from fastapi_admin.widgets import Widget
 
 
 class Input(Widget):

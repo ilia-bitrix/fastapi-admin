@@ -7,10 +7,10 @@ from tortoise import Model
 from tortoise.fields import ManyToManyRelation
 from tortoise.transactions import in_transaction
 
-from app.other_apps.fastapi_admin.depends import get_model, get_model_resource, get_resources
-from app.other_apps.fastapi_admin.resources import Model as ModelResource
-from app.other_apps.fastapi_admin.responses import redirect
-from app.other_apps.fastapi_admin.template import render_values, templates
+from fastapi_admin.depends import get_model, get_model_resource, get_resources
+from fastapi_admin.resources import Model as ModelResource
+from fastapi_admin.responses import redirect
+from fastapi_admin.template import render_values, templates
 
 
 router = APIRouter()
